@@ -15,7 +15,13 @@ const char *WIFI_AP_DEFAULT_PASSWORD = "";
 
 static const SensorConfig SENSOR_CONFIGS[] = {
     {.pin = D2,
-     .name = "1",
+     .name = "PV",
+     .numeric_only = true,
+     .status_led_enabled = true,
+     .status_led_inverted = true,
+     .status_led_pin = LED_BUILTIN},
+     {.pin = D5,
+     .name = "Stadtwerke",
      .numeric_only = true,
      .status_led_enabled = true,
      .status_led_inverted = true,
