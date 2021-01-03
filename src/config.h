@@ -4,7 +4,7 @@
 #include "Arduino.h"
 #include "Sensor.h"
 
-const char *VERSION = "2.1.5";
+const char *VERSION = "2.1.6";
 
 // Modifying the config version will probably cause a loss of the existig configuration.
 // Be careful!
@@ -15,12 +15,19 @@ const char *WIFI_AP_DEFAULT_PASSWORD = "";
 
 static const SensorConfig SENSOR_CONFIGS[] = {
     {.pin = D2,
-     .name = "1",
-     .numeric_only = false,
+     .name = "PV",
+     .numeric_only = true,
      .status_led_enabled = true,
      .status_led_inverted = true,
      .status_led_pin = LED_BUILTIN,
-     .interval = 0}};
+     .interval = 30},
+     {.pin = D5,
+     .name = "Stadtwerke",
+     .numeric_only = true,
+     .status_led_enabled = true,
+     .status_led_inverted = true,
+     .status_led_pin = LED_BUILTIN,
+     .interval = 30}};
 
 const uint8_t NUM_OF_SENSORS = sizeof(SENSOR_CONFIGS) / sizeof(SensorConfig);
 
