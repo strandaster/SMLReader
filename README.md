@@ -1,6 +1,6 @@
 # SMLReader
 
-A smart meter (SML) to MQTT gateway
+An ESP8266 based smart meter (SML) to MQTT gateway 
 
 ## About
 
@@ -10,9 +10,22 @@ The software was primarily developed and tested for the EMH ED300L electricity m
 
 SMLReader publishes the metrics read from the meter's optical unit to an MQTT broker configured via the provided web interface.
 
+If you like this project, you might consider to [support me](#donate).
+
 ### Screenshots
 ![WiFi and MQTT setup](doc/screenshots/screenshot_setup.png)
 ![Grafana](doc/screenshots/screenshot_grafana.png)
+```bash
+MB-Monty ➜  ~  mosquitto_sub -h 10.4.32.103 -v -t smartmeter/mains/#
+smartmeter/mains/info Hello from 00C7551E, running SMLReader version 2.1.5.
+smartmeter/mains/sensor/1/obis/1-0:1.8.0/255/value 3546245.9
+smartmeter/mains/sensor/1/obis/1-0:2.8.0/255/value 13.2
+smartmeter/mains/sensor/1/obis/1-0:1.8.1/255/value 0.0
+smartmeter/mains/sensor/1/obis/1-0:2.8.1/255/value 13.2
+smartmeter/mains/sensor/1/obis/1-0:1.8.2/255/value 3546245.9
+smartmeter/mains/sensor/1/obis/1-0:2.8.2/255/value 0.0
+smartmeter/mains/sensor/1/obis/1-0:16.7.0/255/value 451.2
+```
 
 ### Hardware
 
@@ -107,25 +120,27 @@ static const SensorConfig SENSOR_CONFIGS[] = {
      .numeric_only = false, // If "true", only numeric values are being published via MQTT
      .status_led_enabled = true, // Flash status LED (3 times) when an SML start sequence has been found
      .status_led_inverted = true, // Some LEDs (like the ESP8266 builtin LED) require an inverted output signal
-     .status_led_pin = LED_BUILTIN // GPIO pin used for sensor status LED
+     .status_led_pin = LED_BUILTIN, // GPIO pin used for sensor status LED
+     .interval = 0 // If greater than 0, messages are published every [interval] seconds
     },
     {.pin = D5,
      .name = "2",
      .numeric_only = false,
      .status_led_enabled = true,
      .status_led_inverted = true,
-     .status_led_pin = LED_BUILTIN
+     .status_led_pin = LED_BUILTIN,
+     .interval = 0
     },
     {.pin = D6,
      .name = "3",
      .numeric_only = false,
      .status_led_enabled = true,
      .status_led_inverted = true,
-     .status_led_pin = LED_BUILTIN
+     .status_led_pin = LED_BUILTIN,
+     .interval = 15
     }
 };
 ```
-*Attention: Multi-sensor support is experimental and has not been tested due to the lack of multiple meters. For testing purposes I connected one reading head to multiple GPIO pins of my WeMos D1 mini.*
 
 
 #### Building
@@ -154,6 +169,7 @@ UserSideException: Please install Git client from https://git-scm.com/downloads:
 
 WiFi and MQTT are configured via the web interface provided by [IotWebConf](https://github.com/prampec/IotWebConf) and which can be reached after joining the WiFi network named SMLReader and heading to http://192.168.4.1.   
 If the device has already been configured, the web interface can be reached via the IP address obtained from your local network's DHCP server.
+To login provide the user `admin` and the configured AP password.
 
 *Attention: You have to change the AP Password (empty by default), otherwise SMLReader won't work.*
 
@@ -245,7 +261,8 @@ docker run -it --device /dev/ttyUSB0 -v $(pwd):/src --rm mruettgers/esptool ash 
 * [ESPSoftwareSerial](https://github.com/plerup/espsoftwareserial)
 * [IotWebConf](https://github.com/prampec/IotWebConf)
 * [MicroDebug](https://github.com/rlogiacco/MicroDebug)
-* [MQTT](https://github.com/256dpi/arduino-mqtt)
+* [ESPAsyncTCP](https://github.com/me-no-dev/ESPAsyncTCP)
+* [Pangolin MQTT Client](https://github.com/philbowles/PangolinMQTT)
 * [libSML](https://github.com/volkszaehler/libsml)
 * [JLed](https://github.com/jandelgado/jled)
 
@@ -258,7 +275,25 @@ docker run -it --device /dev/ttyUSB0 -v $(pwd):/src --rm mruettgers/esptool ash 
 
 ## Donate
 
+### Bitcoin
+16XujKGLtx1Lp9ZTvdbpY6Km7jbLHjW2sD
+
+### Paypal
+[![Paypal](https://www.paypalobjects.com/en_US/DK/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=GK95YZCEGJT84)
+
+### Buy me a coffee
 <a href="https://www.buymeacoffee.com/fkqeNT2" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-green.png" alt="Buy Me A Coffee" height="51" width="217"></a>
+
+## Roadmap
+
+* [ ] Use LITTLEFS for config storage
+* [ ] New configuration GUI based on Preact
+* [ ] Configuration of sensors via web interface
+* [ ] Add list of devices that are known to work
+* [ ] Support for ASCII based SML messages (also known as "SML in Textform")
+* [ ] Deep sleep for battery powered devices
+* [ ] Grafana / InfluxDB tutorial based on docker
+* [ ] KNX support for sending readings via an IP gateway to the bus
 
 ## License
 

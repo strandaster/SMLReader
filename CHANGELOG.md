@@ -6,6 +6,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.0] - 2021-05-04
+### Changed
+- Replaced MQTT client library with [Pangolin MQTT Client](https://github.com/philbowles/PangolinMQTT)
+- Refactored throttling logic
+### Fixed
+- [Issue #15](https://github.com/mruettgers/SMLReader/issues/15)
+
+## [2.1.6] - 2021-01-03
+### Added
+- Configuration option to allow setting an inverval for throttling the MQTT messages
+### Fixed
+- Locked third party dependency IotWebConf to version 2 due to incompatible changes in version 3
+
 ## [2.1.5] - 2020-07-25
 ### Changed
 - Modified MQTT topic to use / instead of * due to invalid character issues when used with ioBroker
